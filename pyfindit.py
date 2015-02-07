@@ -37,7 +37,7 @@ def fmt_match(fname, idx, keyword, match):
 
     return out
 
-def search_file(fname, patterns, keyword):
+def search_pattern(fname, patterns, keyword):
     try:
         f = open(fname, "r")
     except FileNotFoundError:
@@ -70,5 +70,5 @@ if __name__ == '__main__':
     for root, dirs, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
-            search_file(full_path, patterns, args.keyword[0])
+            search_pattern(full_path, patterns, args.keyword[0])
 
