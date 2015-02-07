@@ -10,7 +10,7 @@ NO_COMMENT = r"(?!.*\s*[#]\s*)"
 CLASS = r"%s(class\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 DEF = r"%s(def\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 INIT = r"%s({keyword})(\s*=.*$)" % NO_COMMENT
-USE = r"%s(.*[\s\(\[\.])({keyword})(?!\s*=.*)(.*$)" % NO_COMMENT
+USE = r"%s(.*[\s\(\[\.])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
 
 def highlight(string):
     bold = "\033[1m"
