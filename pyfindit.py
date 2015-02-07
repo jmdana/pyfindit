@@ -7,8 +7,8 @@ import argparse
 
 NO_COMMENT = r"(?!.*\s*[#]\s*)"
 
-CLASS = r"%s(class\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
-DEF = r"%s(def\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
+CLASS = r"%s(class)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
+DEF = r"%s(def)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 INIT = r"%s({keyword})(\s*=.*$)" % NO_COMMENT
 USE = r"%s(.*[\s\(\[\.])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
 
@@ -28,9 +28,9 @@ def fmt_match(fname, idx, keyword, match):
     out = "%s :%d\t" % (fname, idx)
 
     for g in match.groups():
-        if g.strip() == keyword:
+        if g == keyword:
             out += highlight(g, "green")
-        elif g.strip() in ("def", "class"):
+        elif g in ("def", "class"):
             out += highlight(g, "red")
         else:
             out += g
