@@ -37,18 +37,23 @@ def fmt_match(fname, idx, keyword, match):
 
     return out
 
-def search_file(fname, pattern, keyword):
+def search_file(fname, patterns, keyword):
     try:
         f = open(fname, "r")
     except FileNotFoundError:
         return
 
-    pattern_re = re.compile(pattern.format(keyword=keyword))
+    compiled = []
+
+    for pattern in patterns:
+        compiled.append(re.compile(pattern.format(keyword=keyword)))
 
     for idx, line in enumerate(f, start=1):
-        m = re.match(pattern_re, line)
-        if m:
-            print(fmt_match(fname, idx, keyword, m))
+        for pattern in compiled:
+            m = re.match(pattern, line)
+            if m:
+                print(fmt_match(fname, idx, keyword, m))
+                break
 
     f.close()
 
@@ -60,11 +65,10 @@ if __name__ == '__main__':
 
     args, unknown = parser.parse_known_args()
 
+    patterns = [CLASS, DEF, INIT, USE]
+
     for root, dirs, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
-            search_file(full_path, CLASS, args.keyword[0])
-            search_file(full_path, DEF, args.keyword[0])
-            search_file(full_path, INIT, args.keyword[0])
-            search_file(full_path, USE, args.keyword[0])
+            search_file(full_path, patterns, args.keyword[0])
 
