@@ -30,7 +30,7 @@ def fmt_match(fname, idx, keyword, match):
     for g in match.groups():
         if g == keyword:
             out += highlight(g, "green")
-        elif g in ("def", "class"):
+        elif g in ("def", "class", "="):
             out += highlight(g, "red")
         else:
             out += g
