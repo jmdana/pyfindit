@@ -18,24 +18,34 @@ import os
 import sys
 from setuptools import setup
 from setuptools.command.easy_install import easy_install
+from setuptools.command.sdist import sdist
 import shutil
 
-EXEC="pyfindit.py"
+EXEC_ORIG="pyfindit.py"
+EXEC_ORIG_PATH = EXEC_ORIG
+
+EXEC = EXEC_ORIG[:-3]
+SCRIPTS_PATH = "scripts"
+EXEC_PATH = os.path.join(SCRIPTS_PATH, EXEC)
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+class md_sdist(sdist):
+    def run(self):
+        # rename the executable
+        if not os.path.exists(SCRIPTS_PATH):
+            os.makedirs(SCRIPTS_PATH)
+
+        print("Copying %s -> %s" % (EXEC_ORIG_PATH, EXEC_PATH))
+        shutil.copyfile(EXEC_ORIG_PATH, EXEC_PATH)
+        sdist.run(self)
 
 class md_easy_install(easy_install):
     def run(self):
         easy_install.run(self)
         install_scripts_dest = list(filter(lambda x: x.endswith(EXEC) and "EGG-INFO" not in x,self.outputs))
         install_scripts_dest = os.path.dirname(install_scripts_dest[0]) if len(install_scripts_dest) else os.path.join(sys.prefix,"bin")
-
-        # rename the executable
-        src = os.path.join(install_scripts_dest, EXEC)
-        dst = src[:-3]
-        shutil.move(src, dst)
-
         if install_scripts_dest not in os.environ["PATH"]:
             print("\n\n")
             print("*" * 80)
@@ -46,15 +56,18 @@ class md_easy_install(easy_install):
 
 setup(
     name="pyfindit",
-    version="0.5",
+    version="0.5.9",
     author="Jose M. Dana",
     description=("Smart grep for Python files."),
     license="GNU General Public License v2 (GPLv2)",
     keywords="grep cscope find class def definition initialization python",
     url="https://github.com/jmdana/pyfindit",
     packages=[],
-    scripts=[EXEC],
-    cmdclass={'easy_install': md_easy_install},
+    scripts=[EXEC_PATH],
+    cmdclass={
+        "easy_install": md_easy_install,
+        "sdist": md_sdist,
+        },
     zip_safe=False,
     long_description=read('README.md'),
     classifiers=[
