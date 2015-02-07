@@ -7,6 +7,7 @@ import argparse
 
 NO_COMMENT = r"(?!.*\s*[#]\s*)"
 
+CLASS = r"%s(class\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 DEF = r"%s(def\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 INIT = r"%s({keyword})(\s*=.*$)" % NO_COMMENT
 USE = r"%s(.*[\s\(\[\.])({keyword})(?!\s*=.*)(.*$)" % NO_COMMENT
@@ -52,6 +53,7 @@ if __name__ == '__main__':
     for root, dirs, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
+            search_file(full_path, CLASS, args.keyword[0])
             search_file(full_path, DEF, args.keyword[0])
             search_file(full_path, INIT, args.keyword[0])
             search_file(full_path, USE, args.keyword[0])
