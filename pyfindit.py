@@ -57,18 +57,21 @@ def search_pattern(fname, patterns, keyword):
 
     f.close()
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("keyword", type=str, nargs=1, help="the keyword to find")
     parser.add_argument("path", type=str, nargs="?", default=".", help="the path")
 
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     patterns = [CLASS, DEF, INIT, USE]
 
-    for root, dirs, fnames in os.walk(args.path):
+    for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
             search_pattern(full_path, patterns, args.keyword[0])
+
+if __name__ == '__main__':
+    main()
 
