@@ -12,19 +12,26 @@ DEF = r"%s(def\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 INIT = r"%s({keyword})(\s*=.*$)" % NO_COMMENT
 USE = r"%s(.*[\s\(\[\.])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
 
-def highlight(string):
+COLORS = {
+    "red": 31,
+    "green": 32,
+    }
+
+def highlight(string, color="green"):
     bold = "\033[1m"
-    green = "\033[32m"
+    tone = "\033[%dm" % COLORS[color]
     reset = "\033[0m"
 
-    return bold + green + string + reset
+    return bold + tone + string + reset
 
 def fmt_match(fname, idx, keyword, match):
     out = "%s :%d\t" % (fname, idx)
 
     for g in match.groups():
-        if g == keyword:
-            out += highlight(g)
+        if g.strip() == keyword:
+            out += highlight(g, "green")
+        elif g.strip() in ("def", "class"):
+            out += highlight(g, "red")
         else:
             out += g
 
@@ -32,7 +39,6 @@ def fmt_match(fname, idx, keyword, match):
 
 def search_file(fname, pattern, keyword):
     f = open(fname, "r")
-
     pattern_re = re.compile(pattern.format(keyword=keyword))
 
     for idx, line in enumerate(f, start=1):
