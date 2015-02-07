@@ -38,7 +38,11 @@ def fmt_match(fname, idx, keyword, match):
     return out
 
 def search_file(fname, pattern, keyword):
-    f = open(fname, "r")
+    try:
+        f = open(fname, "r")
+    except FileNotFoundError:
+        return
+
     pattern_re = re.compile(pattern.format(keyword=keyword))
 
     for idx, line in enumerate(f, start=1):
