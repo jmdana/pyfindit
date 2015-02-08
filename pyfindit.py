@@ -7,10 +7,40 @@ import argparse
 
 NO_COMMENT = r"(?!.*\s*[#]\s*)"
 
-CLASS = r"%s(class)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
-DEF = r"%s(def)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
-ASSIGN = r"%s(\s*)({keyword})(\s*)(=)(.*$)" % NO_COMMENT
-OTHER = r"%s(?!class)(?!def)(.*[\s\(\[\.,])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
+CLASS = r"""
+    %s
+    (class)
+    (\s*)
+    ({keyword})
+    (\s*\(.*$)
+    """ % NO_COMMENT
+
+DEF = r"""
+    %s
+    (def)
+    (\s*)
+    ({keyword})
+    (\s*\(.*$)
+    """ % NO_COMMENT
+
+ASSIGN = r"""
+    %s
+    (\s*)
+    ({keyword})
+    (\s*)
+    (=)
+    (.*$)
+    """ % NO_COMMENT
+
+OTHER = r"""
+    %s
+    (?!class)
+    (?!def)
+    (.*[\s\(\[\.,])
+    ({keyword})
+    (?!\s*[=\w].*)
+    (.*$)
+    """ % NO_COMMENT
 
 COLORS = {
     "red": 31,
@@ -112,7 +142,7 @@ def main():
     args, _ = parser.parse_known_args()
 
     patterns = []
-    flags = 0
+    flags = re.VERBOSE
 
     if not (args.c or args.d or args.v or args.o):
         args.c = True
