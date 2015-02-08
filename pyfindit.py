@@ -9,8 +9,8 @@ NO_COMMENT = r"(?!.*\s*[#]\s*)"
 
 CLASS = r"%s(class)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
 DEF = r"%s(def)(\s*)({keyword})(\s*\(.*$)" % NO_COMMENT
-INIT = r"%s(\s*)({keyword})(\s*)(=)(.*$)" % NO_COMMENT
-USE = r"%s(.*[\s\(\[\.,])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
+ASSIGN = r"%s(\s*)({keyword})(\s*)(=)(.*$)" % NO_COMMENT
+OTHER = r"%s(?!class)(?!def)(.*[\s\(\[\.,])({keyword})(?!\s*[=\w].*)(.*$)" % NO_COMMENT
 
 COLORS = {
     "red": 31,
@@ -60,12 +60,33 @@ def search_pattern(fname, patterns, keyword):
 def main():
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("-c", "--class", dest="c", action="store_true", help="search for classes")
+    parser.add_argument("-d", "--def", dest="d", action="store_true", help="search for functions")
+    parser.add_argument("-v", "--variable", dest="v", action="store_true", help="search for variable assignment.")
+    parser.add_argument("-o", "--other", dest="o", action="store_true", help="search for other apperances.")
+
     parser.add_argument("keyword", type=str, nargs=1, help="the keyword to find")
     parser.add_argument("path", type=str, nargs="?", default=".", help="the path")
 
     args, _ = parser.parse_known_args()
 
-    patterns = [CLASS, DEF, INIT, USE]
+    patterns = []
+    
+    if not (args.c or args.d or args.v or args.o):
+        args.c = True
+        args.d = True
+        args.v = True
+        args.o = True
+    
+
+    if args.c:
+        patterns.append(CLASS)
+    if args.d:
+        patterns.append(DEF)
+    if args.v:
+        patterns.append(ASSIGN)
+    if args.o:
+        patterns.append(OTHER)
 
     for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
