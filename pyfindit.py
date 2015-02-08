@@ -17,6 +17,9 @@ COLORS = {
     "green": 32,
     }
 
+def flag_active(flags, f):
+    return flags == (flags | f)
+
 def highlight(string, color="green"):
     bold = "\033[1m"
     tone = "\033[%dm" % COLORS[color]
@@ -24,11 +27,11 @@ def highlight(string, color="green"):
 
     return bold + tone + string + reset
 
-def fmt_match(fname, idx, keyword, match):
+def fmt_match(fname, idx, keyword, match, icase=False):
     out = "%s :%d\t" % (fname, idx)
 
     for g in match.groups():
-        if g == keyword:
+        if g == keyword or (icase and g.lower() == keyword.lower()):
             out += highlight(g, "green")
         elif g in ("def", "class", "="):
             out += highlight(g, "red")
@@ -43,11 +46,13 @@ def search_pattern(fname, patterns, keyword):
     except FileNotFoundError:
         return
 
+    icase = flag_active(patterns[0].flags, re.IGNORECASE)
+
     for idx, line in enumerate(f, start=1):
         for pattern in patterns:
             m = re.match(pattern, line)
             if m:
-                print(fmt_match(fname, idx, keyword, m))
+                print(fmt_match(fname, idx, keyword, m, icase))
                 break
 
     f.close()
