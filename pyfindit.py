@@ -53,17 +53,56 @@ def search_pattern(fname, patterns, keyword):
     f.close()
 
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        )
 
-    parser.add_argument("-c", "--class", dest="c", action="store_true", help="search for class names only.")
-    parser.add_argument("-d", "--def", dest="d", action="store_true", help="search for function names only.")
-    parser.add_argument("-v", "--variable", dest="v", action="store_true", help="search for variable assignments only.")
-    parser.add_argument("-o", "--other", dest="o", action="store_true", help="search for other apperances only.")
+    parser.add_argument(
+        "-c",
+        "--class",
+        dest="c",
+        action="store_true",
+        help="search for class names only")
 
-    parser.add_argument("-i", "--ignorecase", action="store_true", help="ignore case.")
+    parser.add_argument(
+        "-d",
+        "--def",
+        dest="d",
+        action="store_true",
+        help="search for function names only")
 
-    parser.add_argument("keyword", type=str, nargs=1, help="the keyword to find")
-    parser.add_argument("path", type=str, nargs="?", default=".", help="the path")
+    parser.add_argument(
+        "-v",
+        "--variable",
+        dest="v",
+        action="store_true",
+        help="search for variable assignments only")
+
+    parser.add_argument(
+        "-o",
+        "--other",
+        dest="o",
+        action="store_true",
+        help="search for other apperances only")
+
+    parser.add_argument(
+        "-i",
+        "--ignorecase",
+        action="store_true",
+        help="ignore case")
+
+    parser.add_argument(
+        "keyword",
+        type=str,
+        nargs=1,
+        help="the keyword to find")
+
+    parser.add_argument(
+        "path",
+        type=str,
+        nargs="?",
+        default=".",
+        help="the path")
 
     args, _ = parser.parse_known_args()
 
@@ -91,7 +130,9 @@ def main():
     compiled = []
 
     for pattern in patterns:
-        compiled.append(re.compile(pattern.format(keyword=args.keyword[0]), flags))
+        compiled.append(
+            re.compile(pattern.format(keyword=args.keyword[0]), flags)
+            )
 
     for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
