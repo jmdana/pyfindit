@@ -43,13 +43,8 @@ def search_pattern(fname, patterns, keyword):
     except FileNotFoundError:
         return
 
-    compiled = []
-
-    for pattern in patterns:
-        compiled.append(re.compile(pattern.format(keyword=keyword)))
-
     for idx, line in enumerate(f, start=1):
-        for pattern in compiled:
+        for pattern in patterns:
             m = re.match(pattern, line)
             if m:
                 print(fmt_match(fname, idx, keyword, m))
@@ -88,10 +83,15 @@ def main():
     if args.o:
         patterns.append(OTHER)
 
+    compiled = []
+
+    for pattern in patterns:
+        compiled.append(re.compile(pattern.format(keyword=args.keyword[0])))
+
     for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
-            search_pattern(full_path, patterns, args.keyword[0])
+            search_pattern(full_path, compiled, args.keyword[0])
 
 if __name__ == '__main__':
     main()
