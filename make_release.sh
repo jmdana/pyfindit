@@ -20,10 +20,16 @@ VER=`sed -n 's/\s*version\s*=\s*"\(.*\)\s*"\s*,/\1/p' setup.py`
 NAME=`sed -n 's/\s*name\s*=\s*"\(.*\)\s*"\s*,/\1/p' setup.py`
 PYPI_URL="https://pypi.python.org/packages/source/${NAME:0:1}/${NAME}/${NAME}-${VER}.tar.gz"
 ARCH_PATH="./archlinux"
+ARCH_NAME=`sed -n "s/\s*pkgname\s*=\s*\(.*\)\s*/\1/p" ${ARCH_PATH}/PKGBUILD`
+ARCH_REL=`sed -n "s/\s*pkgrel\s*=\s*\(.*\)\s*/\1/p" ${ARCH_PATH}/PKGBUILD`
 
 echo "PACKAGE: ${NAME}"
+echo "ARCH_NAME: ${ARCH_NAME}"
 echo "VERSION: ${VER}"
+echo "ARCH_RELEASE: ${ARCH_REL}"
 echo "PYPI: ${PYPI_URL}"
+echo "ARCH_PATH: ${ARCH_PATH}"
+
 read -p "Do you want to continue? [y/n]" -n 1 -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -50,7 +56,8 @@ then
 
     # Make the Arch package
     pushd ${ARCH_PATH}
-    makepkg
+    makepkg --source
+    burp ${ARCH_NAME}-${VER}-${ARCH_REL}.src.tar.gz
     popd
     
     # Make sure that the commit was made
