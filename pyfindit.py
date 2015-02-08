@@ -60,19 +60,21 @@ def main():
     parser.add_argument("-v", "--variable", dest="v", action="store_true", help="search for variable assignment.")
     parser.add_argument("-o", "--other", dest="o", action="store_true", help="search for other apperances.")
 
+    parser.add_argument("-i", "--ignorecase", action="store_true", help="ignore case.")
+
     parser.add_argument("keyword", type=str, nargs=1, help="the keyword to find")
     parser.add_argument("path", type=str, nargs="?", default=".", help="the path")
 
     args, _ = parser.parse_known_args()
 
     patterns = []
-    
+    flags = 0
+
     if not (args.c or args.d or args.v or args.o):
         args.c = True
         args.d = True
         args.v = True
         args.o = True
-    
 
     if args.c:
         patterns.append(CLASS)
@@ -83,10 +85,13 @@ def main():
     if args.o:
         patterns.append(OTHER)
 
+    if args.ignorecase:
+        flags |= re.IGNORECASE
+
     compiled = []
 
     for pattern in patterns:
-        compiled.append(re.compile(pattern.format(keyword=args.keyword[0])))
+        compiled.append(re.compile(pattern.format(keyword=args.keyword[0]), flags))
 
     for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
