@@ -56,7 +56,7 @@ class md_easy_install(easy_install):
 
 setup(
     name="pyfindit",
-    version="0.7.1",
+    version="0.7.2",
     author="Jose M. Dana",
     description=("Smart grep for Python files."),
     license="GNU General Public License v2 (GPLv2)",
