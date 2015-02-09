@@ -1,0 +1,3 @@
+[submodule "pyquickrelease"]
+	path = pyquickrelease
+	url = https://github.com/jmdana/pyquickrelease
