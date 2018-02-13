@@ -9,6 +9,7 @@ NO_COMMENT = r"(?!.*\s*[#]\s*)"
 
 CLASS = r"""
     %s
+    \s*
     (class)
     (\s*)
     ({keyword})
@@ -17,6 +18,7 @@ CLASS = r"""
 
 DEF = r"""
     %s
+    \s*
     (def)
     (\s*)
     ({keyword})
