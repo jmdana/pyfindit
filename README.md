@@ -9,5 +9,5 @@ or
     sudo easy_install --upgrade pyfindit
 
 ---
-Copyright 2015, Jose M. Dana
+Copyright 2018, Jose M. Dana
 
