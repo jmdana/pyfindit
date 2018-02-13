@@ -47,10 +47,12 @@ OTHER = r"""
 COLORS = {
     "red": 31,
     "green": 32,
-    }
+}
+
 
 def flag_active(flags, f):
     return flags == (flags | f)
+
 
 def highlight(string, color="green"):
     bold = "\033[1m"
@@ -58,6 +60,7 @@ def highlight(string, color="green"):
     reset = "\033[0m"
 
     return bold + tone + string + reset
+
 
 def fmt_match(fname, idx, keyword, match, icase=False):
     out = "%s :%d\t" % (fname, idx)
@@ -71,6 +74,7 @@ def fmt_match(fname, idx, keyword, match, icase=False):
             out += g
 
     return out
+
 
 def search_pattern(fname, patterns, keyword):
     try:
@@ -89,10 +93,11 @@ def search_pattern(fname, patterns, keyword):
 
     f.close()
 
+
 def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
+    )
 
     parser.add_argument(
         "-c",
@@ -169,13 +174,13 @@ def main():
     for pattern in patterns:
         compiled.append(
             re.compile(pattern.format(keyword=args.keyword[0]), flags)
-            )
+        )
 
     for root, _, fnames in os.walk(args.path):
         for fname in [x for x in fnames if x.endswith(".py")]:
             full_path = os.path.join(root, fname)
             search_pattern(full_path, compiled, args.keyword[0])
 
+
 if __name__ == '__main__':
     main()
-
