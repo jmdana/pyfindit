@@ -79,7 +79,8 @@ def fmt_match(fname, idx, keyword, match, icase=False):
 def search_pattern(fname, patterns, keyword):
     try:
         f = open(fname, "r")
-    except FileNotFoundError:
+    except IOError:
+        # The file was removed during execution, keep going
         return
 
     icase = flag_active(patterns[0].flags, re.IGNORECASE)
